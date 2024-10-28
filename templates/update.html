@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Contact</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Update Contact</h2>
+        <form action="/update/{{ contact['_id'] }}" method="POST">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" value="{{ contact['name'] }}" required>
+
+            <label for="number">Phone Number:</label>
+            <input type="text" id="number" name="number" value="{{ contact['number'] }}" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="{{ contact['email'] }}" required>
+
+            <label for="profile_photo">Profile Photo URL:</label>
+            <input type="text" id="profile_photo" name="profile_photo" value="{{ contact['profile_photo'] }}">
+
+            <label for="favorite">
+                <input type="checkbox" id="favorite" name="favorite" {% if contact['favorite'] %}checked{% endif %}> Favorite
+            </label>
+
+            <button type="submit">Update Contact</button>
+        </form>
+        <a href="/">Back to Contacts List</a>
+    </div>
+</body>
+</html>
