@@ -1,1 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phonebook</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Phonebook</h1>
+
+        <!-- Search Form -->
+        <form action="/search" method="GET" class="search-form">
+            <input type="text" name="query" placeholder="Search contacts..." class="search-input">
+            <button type="submit" class="btn">Search</button>
+        </form>
+
+        <!-- View Favorites and Add Contact Buttons -->
+        <div class="btn-container">
+            <a href="/favorites" class="btn">View Favorites</a>
+            <a href="javascript:void(0)" id="add-contact-btn" class="btn">Add Contact</a> <!-- Add Contact Button -->
+        </div>
+
+        <!-- Contacts Table -->
+        <table class="contact-table">
+            <thead>
+                <tr>
+                    <th>Photo</th> <!-- New column for the profile photo -->
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for contact in contacts %}
+                <tr>
+                    <td>
+                        {% if contact.profile_photo %}
+                        <!-- Adjust path to remove "static/" part because Flask automatically looks in the static folder -->
+                        <img src="{{ url_for('static', filename=contact.profile_photo.split('static/')[1]) }}" alt="Profile Photo" class="profile-photo">
+                        {% else %}
+                        <img src="{{ url_for('static', filename='images/default-profile.png') }}" alt="Default Photo" class="profile-photo">
+                        {% endif %}
+                    </td>
+                    <td>{{ contact.name }}</td>
+                    <td>{{ contact.number }}</td>
+                    <td>{{ contact.email }}</td>
+                    <td>
+                        <a href="/update/{{ contact._id }}" class="action-link">Edit</a> | 
+                        <a href="/delete/{{ contact._id }}" class="action-link">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Add Contact Modal -->
+        <div id="add-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span> <!-- Close button -->
+                <h2>Add New Contact</h2>
+                <form action="/add" method="POST" enctype="multipart/form-data"> <!-- Added enctype -->
+                    <label>Name</label>
+                    <input type="text" name="name" required>
+                    <label>Number</label>
+                    <input type="text" name="number" required>
+                    <label>Email</label>
+                    <input type="email" name="email" required>
+                    <label>Profile Photo</label>
+                    <input type="file" name="profile_photo" accept="image/*"> <!-- Allow image file upload -->
+                    <label><input type="checkbox" name="favorite"> Favorite</label>
+                    <button type="submit" class="btn">Add Contact</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Modal JavaScript -->
+    <script>
+        // Get the modal
+        var modal = document.getElementById("add-modal");
+
+        // Get the button that opens the modal
+        var btn = document.getElementById("add-contact-btn");
+
+        // Get the <span> element that closes the modal
+        var closeBtn = document.getElementsByClassName("close")[0];
+
+        // When the user clicks on the button, open the modal
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        closeBtn.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
 
